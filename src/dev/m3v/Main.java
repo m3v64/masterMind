@@ -1,3 +1,4 @@
+package dev.m3v;
 public class Main {
     public static void main(String[] args) throws Exception {
         String colors[] = {"Red", "Green", "Yellow", "Orange", "Purple", "Blue", "space"};
