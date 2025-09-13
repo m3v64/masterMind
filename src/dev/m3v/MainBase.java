@@ -15,7 +15,7 @@ public class MainBase {
         clearTerminal();
         
         System.out.println("Welcome to Mastermind!");
-        System.out.println("You have 10 turns to guess the correct sequence.");
+        System.out.println("You have a number of turns to guess the correct sequence.");
         System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
         System.out.println("when the game starts choose "+numberOfColors+" colors (separated by a space, for example: Red Green Blue Yellow): ");
         System.out.println("Each round you get "+numberOfColors+" hints: 'black' means you have a correct color in the correct position, 'white' means you have a correct color in the wrong position and 'none' means that color is not in the sequence.");
@@ -46,6 +46,7 @@ public class MainBase {
                 maxTurns = 10;
                 break;
         }
+
         System.out.println("Good luck!");
         System.out.println("Press Enter to start the game...");
         scanner.nextLine();
@@ -55,8 +56,8 @@ public class MainBase {
         String answer[] = new String[numberOfColors];
         boolean usedAnswer[] = new boolean[numberOfColors];
         boolean usedGuess[] = new boolean[numberOfColors];
-        String[] historyGuesses = new String[maxTurns];
-        String[] historyHints = new String[maxTurns];
+        String historyGuesses[] = new String[maxTurns];
+        String historyHints[] = new String[maxTurns];
 
         while (index < numberOfColors) {
             int rand = (int) (Math.random() * 6);
@@ -79,6 +80,7 @@ public class MainBase {
                     }
                     System.out.println();
                 }
+
                 System.out.println("choose "+numberOfColors+" colors: ");
                 String input = scanner.nextLine();
                 String[] inputColors = input.split(" ");
@@ -108,6 +110,7 @@ public class MainBase {
                     historyGuesses[turn] = String.join(" ", inputColors);
                     historyHints[turn] = String.join(" ", hints);
                 }
+
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter "+numberOfColors+" colors separated by spaces.");
                 continue;
