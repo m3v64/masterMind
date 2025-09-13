@@ -15,7 +15,7 @@ public class MainBase {
         clearTerminal();
         
         System.out.println("Welcome to Mastermind!");
-        System.out.println("You have 10 turns to guess the correct sequence.");
+        System.out.println("You have a number of turns to guess the correct sequence.");
         System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
         System.out.println("when the game starts choose "+numberOfColors+" colors (separated by a space, for example: Red Green Blue Yellow): ");
         System.out.println("Each round you get "+numberOfColors+" hints: 'black' means you have a correct color in the correct position, 'white' means you have a correct color in the wrong position and 'none' means that color is not in the sequence.");
