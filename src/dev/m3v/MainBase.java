@@ -3,17 +3,21 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class MainBase {
+    // ik heb totaal niet alle comments ge autocomplete met vscode... 100%...
     public static void main(String[] args) {
+        // Initialize scanner for user input
         Scanner scanner = new Scanner(System.in);
 
+        // Game variables
         int numberOfColors = 4;
         int index = 0;
         int turn = 0;
         int maxTurns = 10;
         boolean gameOver = false;
 
-        clearTerminal();
+        clearTerminal(); // Clear the terminal at the start
         
+        // Game instructions
         System.out.println("Welcome to Mastermind!");
         System.out.println("You have a number of turns to guess the correct sequence.");
         System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
@@ -21,8 +25,9 @@ public class MainBase {
         System.out.println("Each round you get "+numberOfColors+" hints: 'black' means you have a correct color in the correct position, 'white' means you have a correct color in the wrong position and 'none' means that color is not in the sequence.");
         System.out.println("there are 4 difficulties: easy (4 colors, 12 turns), normal (6 colors, 10 turns), hard (8 colors, 8 turns), very hard (10 colors, 6 turns)");
         System.out.print("What difficulty do you want to play?: ");
-
         String difficulty = scanner.nextLine().toLowerCase();
+        
+        // Set difficulty
         switch (difficulty) {
             case "easy":
                 numberOfColors = 4;
@@ -47,10 +52,12 @@ public class MainBase {
                 break;
         }
 
+        // Start the game
         System.out.println("Good luck!");
         System.out.println("Press Enter to start the game...");
         scanner.nextLine();
 
+        // Initialize game arrays
         String colors[] = {"Red", "Green", "Yellow", "Orange", "Purple", "Blue"};
         String hints[] = new String[numberOfColors];
         String answer[] = new String[numberOfColors];
@@ -59,18 +66,22 @@ public class MainBase {
         String historyGuesses[] = new String[maxTurns];
         String historyHints[] = new String[maxTurns];
 
+        // Generate random answer
         while (index < numberOfColors) {
             int rand = (int) (Math.random() * 6);
             answer[index] = colors[rand];
             index++;
         }
 
+        // Main game loop
         while (!gameOver) {
+            // Reset hints and used arrays
             Arrays.fill(hints, null);
             Arrays.fill(usedAnswer, false);
             Arrays.fill(usedGuess, false);
 
             try {
+                // Get player input            
                 clearTerminal();
                 if (turn > 0) {
                     System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
@@ -81,6 +92,7 @@ public class MainBase {
                     System.out.println();
                 }
 
+                // Prompt for input
                 System.out.println("choose "+numberOfColors+" colors: ");
                 String input = scanner.nextLine();
                 String[] inputColors = input.split(" ");
@@ -93,6 +105,7 @@ public class MainBase {
                     }
                 }
 
+                // Check for correct colors in wrong positions
                 for (int i = 0; i < numberOfColors; i++) {
                     if (usedGuess[i]) continue;
                     for (int j = 0; j < numberOfColors; j++) {
@@ -107,15 +120,18 @@ public class MainBase {
                         hints[i] = "none";
                     }
 
+                    // Store history
                     historyGuesses[turn] = String.join(" ", inputColors);
                     historyHints[turn] = String.join(" ", hints);
                 }
 
+            // Catch invalid input
             } catch (Exception e) {
                 System.out.println("Invalid input. Please enter "+numberOfColors+" colors separated by spaces.");
                 continue;
             }
 
+            // Check for win/loss
             if (printHintsAndCheckWin(hints)) {
                 System.out.println("you have won! the correct sequence was: " + String.join(" ", answer));
                 gameOver = true;
@@ -132,12 +148,14 @@ public class MainBase {
         scanner.close();
     }
 
+    // Simple terminal clear by printing new lines
     public static void clearTerminal() {
         for (int i = 0; i < 50; i++) {
             System.out.println();
         }
     }
 
+    // Print hints and check for win condition
     private static boolean printHintsAndCheckWin(String[] hints) {
         for (String hint : hints) {
             if (!"black".equals(hint)) {
