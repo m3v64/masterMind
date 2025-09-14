@@ -21,7 +21,7 @@ public class MainBase {
         System.out.println("Welcome to Mastermind!");
         System.out.println("You have a number of turns to guess the correct sequence.");
         System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
-        System.out.println("when the game starts choose "+numberOfColors+" colors (separated by a space, for example: Red Green Blue Yellow): ");
+        System.out.println("when the game starts choose "+numberOfColors+" colors (separated by a space, for example: Red Green Blue Yellow)");
         System.out.println("Each round you get "+numberOfColors+" hints: 'black' means you have a correct color in the correct position, 'white' means you have a correct color in the wrong position and 'none' means that color is not in the sequence.");
         System.out.println("there are 4 difficulties: easy (4 colors, 12 turns), normal (6 colors, 10 turns), hard (8 colors, 8 turns), very hard (10 colors, 6 turns)");
         System.out.print("What difficulty do you want to play?: ");
@@ -70,6 +70,7 @@ public class MainBase {
         while (index < numberOfColors) {
             int rand = (int) (Math.random() * 6);
             answer[index] = colors[rand];
+            System.out.println(rand);
             index++;
         }
 
@@ -83,8 +84,8 @@ public class MainBase {
             try {
                 // Get player input            
                 clearTerminal();
+                System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
                 if (turn > 0) {
-                    System.out.println("The possible colors are: Red, Green, Yellow, Orange, Purple and Blue");
                     System.out.println("Previous moves:");
                     for (int i = 0; i < turn; i++) {
                         System.out.println((i + 1) + ". Guess: " + historyGuesses[i] + "  |  Hints: " + historyHints[i]);
@@ -116,6 +117,7 @@ public class MainBase {
                             break;
                         }
                     }
+                    // Mark as 'none' if not found
                     if (!usedGuess[i]) {
                         hints[i] = "none";
                     }
