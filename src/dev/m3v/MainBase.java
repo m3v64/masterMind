@@ -8,9 +8,13 @@ public class MainBase {
         Scanner scanner = new Scanner(System.in);
 
         // Game variables
-        int codeLength = 4;
+        int codeLength = 6;
         int turn = 0;
-        int maxTurns = 10;
+        int totalTurns = 0;
+        int maxTurns = 6;
+        int winCount = 0;
+        int lossCount = 0;
+        int itteration = 0;
         boolean gameOver = false;
         boolean solveMode = false;
 
@@ -57,8 +61,6 @@ public class MainBase {
 
             case "solver":
                 System.out.println("you have chosen solver mode, why play when your computer can do it for you?");
-                codeLength = 4;
-                maxTurns = 6;
                 solveMode = true;
                 break;
 
@@ -68,11 +70,6 @@ public class MainBase {
                 maxTurns = 10;
                 break;
         }
-
-        // Start the gameturn
-        System.out.println("Press Enter to start the game...");
-        scanner.nextLine();
-        clearTerminal();
 
         // Initialize gameturn arrays
         String colors[] = {"Red", "Green", "Yellow", "Orange", "Purple", "Blue"};
@@ -106,7 +103,31 @@ public class MainBase {
 
             // Play a turn
             if (solveMode) {
-                solver(answer, maxTurns, codeLength, numberOfColors, turn);
+                System.out.println("welcome to the solver, first a few questions:");
+                System.out.println("1. how many itterations?");
+                int itterations = scanner.nextInt();
+                System.out.println("2. what should the length of the code be?");
+                codeLength = scanner.nextInt();
+                System.out.println("3. how many turns should it get?");
+                maxTurns = scanner.nextInt();
+                while (itterations-- > 0) {
+                    int turnsUsed = solver(maxTurns, codeLength, numberOfColors); // solver should return #turns
+                    totalTurns = turnsUsed + totalTurns;
+
+                    if (turnsUsed <= maxTurns) {
+                        winCount++;
+                    } else {
+                        lossCount++;
+                    }
+                    itteration++;
+
+                    // compute average
+                    double average = (double) totalTurns / itteration;
+
+                    System.out.println("The solver has finished " + itteration + " iterations "
+                            + "with an average of " + String.format("%.2f", average) + " turns per iteration.");
+                    System.out.println("Current score: " + winCount + " wins and " + lossCount + " losses.");
+                }
                 gameOver = true;
                 continue;
             } else if (!gameTurn(turn, codeLength, answer, colors, scanner, hints, usedAnswer, usedGuess, solveMode, historyGuesses, historyHints)) {
@@ -120,7 +141,7 @@ public class MainBase {
             if (checkWin(hints)) {
                 System.out.println("you have won! the correct sequence was: " + String.join(" ", answer));
                 gameOver = true;
-            } else if (turn == maxTurns - 1) {
+            } else if (turn >= maxTurns) {
                 System.out.println("you have lost! the correct sequence was: " + String.join(" ", answer));
                 gameOver = true;
             }
@@ -196,23 +217,30 @@ public class MainBase {
         boolean validInput = true;
 
         // Check for valid input
-        for (int i = 0; i < inputColors.length; i++) {
-            if (inputColors.length != codeLength) {
-                clearTerminal();
-                historyGuesses[turn] = String.join(" ", inputColors);
-                historyHints[turn] = safeJoin(hints);
-                validInput = false;
-                System.out.println("Invalid input, enter " + codeLength + " colors.");
-                return false;
-            } else if (inputColors[i].equalsIgnoreCase(colors[0]) || inputColors[i].equalsIgnoreCase(colors[1]) || inputColors[i].equalsIgnoreCase(colors[2]) || inputColors[i].equalsIgnoreCase(colors[3]) || inputColors[i].equalsIgnoreCase(colors[4]) || inputColors[i].equalsIgnoreCase(colors[5])) {
-                continue;
-            } else {
-                clearTerminal();
-                historyGuesses[turn] = String.join(" ", inputColors);
-                historyHints[turn] = safeJoin(hints);
-                validInput = false;
-                System.out.println("Invalid input, enter " + codeLength + " colors.");
-                return false;
+        if (inputColors.length != codeLength) {
+            clearTerminal();
+            historyGuesses[turn] = String.join(" ", inputColors);
+            historyHints[turn] = safeJoin(hints);
+            validInput = false;
+            System.out.println("Invalid input, enter " + codeLength + " colors.");
+            return false;
+        } else {
+            for (int i = 0; i < inputColors.length; i++) {
+                boolean found = false;
+                for (String color : colors) {
+                    if (inputColors[i].equalsIgnoreCase(color)) {
+                        found = true;
+                        continue;
+                    }
+                }
+                if (!found) {
+                    clearTerminal();
+                    historyGuesses[turn] = String.join(" ", inputColors);
+                    historyHints[turn] = safeJoin(hints);
+                    validInput = false;
+                    System.out.println("Invalid input, enter " + codeLength + " colors.");
+                    return false;
+                }
             }
         }
 
@@ -253,8 +281,10 @@ public class MainBase {
         }
 
         // Store history
-        historyGuesses[turn] = String.join(" ", inputColors);
-        historyHints[turn] = String.join(" ", hints);
+        if (validInput) {
+            historyGuesses[turn] = String.join(" ", inputColors);
+            historyHints[turn] = String.join(" ", hints);
+        }
 
         // Display current hints
         clearTerminal();
@@ -295,116 +325,98 @@ public class MainBase {
         return new int[]{blacks, whites};
     }
 
-    public static void solver(String[] answer, int maxTurns, int codeLength, int numberOfColors, int turn) {
-        // Initialize... everything...
+    public static int solver(int maxTurns, int codeLength, int numberOfColors) {
         int totalSolutions = (int) Math.pow(numberOfColors, codeLength);
-        boolean solveOver = false;
-        int possibleAnswers[][] = new int[codeLength][totalSolutions];
-        boolean checkedGuess[] = new boolean[codeLength];
-        boolean checkedAnswer[] = new boolean[codeLength];
-        String solverHints[] = new String[codeLength];
-        int solverInput[] = new int[codeLength];
-        int answerInt[] = new int[codeLength];
-        int[] actualFeedback = getFeedback(solverInput, answerInt);
-        int blacks = actualFeedback[0];
-        int whites = actualFeedback[1];
 
-        // Step 0: Convert answer to int array
-        for (int i = 0; i < codeLength; i++) {
-            for (int j = 0; j < numberOfColors; j++) {
-                if (answer[i].equalsIgnoreCase("Red")) {
-                    answerInt[i] = 0;
-                } else if (answer[i].equalsIgnoreCase("Green")) {
-                    answerInt[i] = 1;
-                } else if (answer[i].equalsIgnoreCase("Yellow")) {
-                    answerInt[i] = 2;
-                } else if (answer[i].equalsIgnoreCase("Orange")) {
-                    answerInt[i] = 3;
-                } else if (answer[i].equalsIgnoreCase("Purple")) {
-                    answerInt[i] = 4;
-                } else if (answer[i].equalsIgnoreCase("Blue")) {
-                    answerInt[i] = 5;
-                }
+        // Store candidates as [totalSolutions][codeLength]
+        int[][] candidates = new int[totalSolutions][codeLength];
+        boolean[] possible = new boolean[totalSolutions];
+        for (int i = 0; i < possible.length; i++) {
+                possible[i] = true;
             }
+        
+        int[] solverAnswer = new int[codeLength];
+        for (int i = 0; i < codeLength; i++) {
+            int rand = (int) (Math.random() * numberOfColors);
+            solverAnswer[i] = rand;
         }
 
-        // Step 1: Generate all possible combinations of colors
+        // Step 1: generate all codes
         for (int col = 0; col < totalSolutions; col++) {
             int num = col;
             for (int row = codeLength - 1; row >= 0; row--) {
-                possibleAnswers[row][col] = num % numberOfColors;
+                candidates[col][row] = num % numberOfColors;
                 num /= numberOfColors;
             }
         }
-        
-        // Step 2: Start with guessing 1122 (green, green, yellow, yellow)
-        // if (turn == 0) {
-            
-        // }
 
-        while (!solveOver) {
-            // Step 3: play the guess and get hints
-            for (int i = 0; i < codeLength; i++) {
-                if (solverInput[i] == answerInt[i]) {
-                    solverHints[i] = "black";
-                }
+        // Step 2: start with fixed first guess (Knuth uses 1,1,2,2)
+        int[] guess = new int[codeLength];
+        int color = 1;
+        for (int i = 0; i < codeLength; i += 2) {
+            guess[i] = color;
+            if (i + 1 < codeLength) {
+                guess[i + 1] = color;
             }
-
-            for (int i = 0; i < codeLength; i++) {
-                if (!checkedGuess[i]) {
-                    for (int j = 0; j < codeLength; j++) {
-                        if (!checkedAnswer[j] && solverInput[i] == answerInt[j]) {
-                            solverHints[i] = "white";
-                            checkedGuess[i] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < codeLength; i++) {
-                if (solverHints[i] == null) {
-                    solverHints[i] = "none";
-                }
-            }
-
-            // Step 4: exit if won
-            if (checkWin(solverHints)) {
-                System.out.println("you have won! the correct sequence was: " + String.join(" ", answer));
-                solveOver = true;
-            } else if (turn == maxTurns - 1) {
-                System.out.println("you have lost! the correct sequence was: " + String.join(" ", answer));
-                solveOver = true;
-            }
-
-            // Step 5: eliminate impossible answers
-            for (int col = 0; col < totalSolutions; col++) {
-                if (possibleAnswers[0][col] == -1) continue;
-
-                int[] candidate = new int[codeLength];
-                for (int i = 0; i < codeLength; i++) {
-                    candidate[i] = possibleAnswers[i][col];
-                }
-
-                int[] feedback = getFeedback(solverInput, candidate);
-
-                if (feedback[0] != blacks || feedback[1] != whites) {
-                    for (int i = 0; i < codeLength; i++) {
-                        possibleAnswers[i][col] = -1;
-                    }
-                }
-            }
-
-            // Debug
-            for (int col = 0; col < totalSolutions; col++) {
-                if (possibleAnswers[0][col] == -1) continue; // skip eliminated
-
-                System.out.print("Candidate " + col + ": ");
-                for (int row = 0; row < codeLength; row++) {
-                    System.out.print(possibleAnswers[row][col] + " ");
-                }
-                System.out.println();
+            color++;
+            if (color >= numberOfColors) {
+                color = 0;
             }
         }
+
+        for (int turn = 0; turn <= maxTurns; turn++) {
+            // Get feedback against the *real* answer
+            int[] feedback = getFeedback(guess, solverAnswer);
+            System.out.print("Turn " + (turn + 1) + " guess=[");
+            for (int i = 0; i < guess.length; i++) {
+                System.out.print(guess[i]);
+                if (i < guess.length - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.print("] feedback=[");
+
+            // print feedback
+            for (int i = 0; i < feedback.length; i++) {
+                System.out.print(feedback[i]);
+                if (i < feedback.length - 1) {
+                    System.out.print(" black, ");
+                }
+            }
+            System.out.print("white]");
+
+            // Check win
+            if (feedback[0] == codeLength) {
+                System.out.println("Solved in " + (turn + 1) + " turns!");
+                return turn+1;
+            }
+
+            // Step 3: eliminate impossible codes
+            for (int col = 0; col < totalSolutions; col++) {
+                if (!possible[col]) continue;
+                int[] candidate = candidates[col];
+                int[] candFeedback = getFeedback(guess, candidate);
+                if (candFeedback[0] != feedback[0] || candFeedback[1] != feedback[1]) {
+                    possible[col] = false;
+                }
+            }
+
+            // Step 4: pick next guess from surviving candidates
+            guess = null;
+            for (int col = 0; col < totalSolutions; col++) {
+                if (possible[col]) {
+                    guess = candidates[col];
+                    break;
+                }
+            }
+
+            if (guess == null) {
+                System.out.println("oops, no candidates left! Something went wrong.");
+                return turn+1;
+            }
+        }
+
+        System.out.println("Failed to solve in " + maxTurns + " turns.");
+        return maxTurns;
     }
 }
