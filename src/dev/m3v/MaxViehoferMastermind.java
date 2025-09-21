@@ -1,8 +1,9 @@
 package dev.m3v;
 import java.util.Scanner;
 
-public class MainBase {
+public class MaxViehoferMastermind {
     public static void main(String[] args) {
+        // Scanner initialization
         Scanner scanner = new Scanner(System.in);
 
         // Game variables
@@ -39,7 +40,7 @@ public class MainBase {
             case "normal":    codeLength = 6;  maxTurns = 10; break;
             case "hard":      codeLength = 8;  maxTurns = 8;  break;
             case "very hard": codeLength = 10; maxTurns = 6;  break;
-            case "solver": solveMode = true; break;
+            case "solver":    solveMode = true;               break;
             default:
                 System.out.println("Invalid choice — defaulting to normal.");
                 codeLength = 6; maxTurns = 10;
@@ -87,41 +88,6 @@ public class MainBase {
         scanner.close();
     }
 
-    public static void clearTerminal() {
-        for (int i = 0; i < 10; i++) {
-            System.out.println("");
-        }
-        System.out.println("---");
-    }
-
-    private static void displayHints(String[] historyGuesses, String[] historyHints, boolean validInput, int turn) {
-        if (!validInput) {
-            for (int i = 0; i <= turn && i < historyGuesses.length; i++) {
-                if (historyGuesses[i] != null) {
-                    System.out.println((i + 1) + ". Guess: " + historyGuesses[i] + "  |  Hints: invalid input");
-                }
-            }
-            System.out.println();
-            return;
-        }
-
-        System.out.println("Previous moves:");
-        for (int i = 0; i <= turn && i < historyGuesses.length; i++) {
-            if (historyGuesses[i] != null && historyHints[i] != null) {
-                System.out.println((i + 1) + ". Guess: " + historyGuesses[i] + "  |  Hints: " + historyHints[i]);
-            }
-        }
-        System.out.println();
-    }
-
-    private static boolean checkWin(String[] hints) {
-        for (String hint : hints) {
-            if (!"black".equalsIgnoreCase(hint)) return false;
-        }
-        return true;
-    }
-
-    // Game turn
     private static boolean gameTurn(int turn, int codeLength, String[] answer, String[] colors, Scanner scanner, String[] hints, boolean[] usedAnswer, boolean[] usedGuess, String[] historyGuesses, String[] historyHints) {
         System.out.println("Possible colors (capital letters can be omitted): ");
         for (int i = 0; i < colors.length; i++) {
@@ -210,38 +176,40 @@ public class MainBase {
         return true;
     }
 
-    public static int[] getFeedback(int[] guess, int[] secret) {
-        int length = guess.length;
-        boolean[] guessUsed = new boolean[length];
-        boolean[] secretUsed = new boolean[length];
-        int blacks = 0;
-        int whites = 0;
-
-        for (int i = 0; i < length; i++) {
-            if (guess[i] == secret[i]) {
-                blacks++;
-                guessUsed[i] = true;
-                secretUsed[i] = true;
-            }
+    public static void clearTerminal() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println("");
         }
-
-        for (int i = 0; i < length; i++) {
-            if (guessUsed[i]) continue;
-            for (int j = 0; j < length; j++) {
-                if (secretUsed[j]) continue;
-                if (guess[i] == secret[j]) {
-                    whites++;
-                    guessUsed[i] = true;
-                    secretUsed[j] = true;
-                    break;
-                }
-            }
-        }
-
-        return new int[]{blacks, whites};
+        System.out.println("---");
     }
 
-    // Avoid invalid input errors
+    private static void displayHints(String[] historyGuesses, String[] historyHints, boolean validInput, int turn) {
+        if (!validInput) {
+            for (int i = 0; i <= turn && i < historyGuesses.length; i++) {
+                if (historyGuesses[i] != null) {
+                    System.out.println((i + 1) + ". Guess: " + historyGuesses[i] + "  |  Hints: invalid input");
+                }
+            }
+            System.out.println();
+            return;
+        }
+
+        System.out.println("Previous moves:");
+        for (int i = 0; i <= turn && i < historyGuesses.length; i++) {
+            if (historyGuesses[i] != null && historyHints[i] != null) {
+                System.out.println((i + 1) + ". Guess: " + historyGuesses[i] + "  |  Hints: " + historyHints[i]);
+            }
+        }
+        System.out.println();
+    }
+
+    private static boolean checkWin(String[] hints) {
+        for (String hint : hints) {
+            if (!"black".equalsIgnoreCase(hint)) return false;
+        }
+        return true;
+    }
+
     private static int readInt(Scanner scanner) {
         while (true) {
             String line = scanner.nextLine().trim();
@@ -284,6 +252,37 @@ public class MainBase {
             System.out.println("The solver has finished " + iteration + " iterations" + " with an average of " + String.format("%.2f", average) + " turns per iteration.");
             System.out.println("Current score: " + winCount + " wins and " + lossCount + " losses.");
         }
+    }
+
+    public static int[] getFeedback(int[] guess, int[] secret) {
+        int length = guess.length;
+        boolean[] guessUsed = new boolean[length];
+        boolean[] secretUsed = new boolean[length];
+        int blacks = 0;
+        int whites = 0;
+
+        for (int i = 0; i < length; i++) {
+            if (guess[i] == secret[i]) {
+                blacks++;
+                guessUsed[i] = true;
+                secretUsed[i] = true;
+            }
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (guessUsed[i]) continue;
+            for (int j = 0; j < length; j++) {
+                if (secretUsed[j]) continue;
+                if (guess[i] == secret[j]) {
+                    whites++;
+                    guessUsed[i] = true;
+                    secretUsed[j] = true;
+                    break;
+                }
+            }
+        }
+
+        return new int[]{blacks, whites};
     }
 
     public static int solver(int maxTurns, int codeLength, int numberOfColors) {

@@ -4,9 +4,9 @@
         <attribute name="name" value="mastermind-flowgorithm"/>
         <attribute name="authors" value="maxvi"/>
         <attribute name="about" value=""/>
-        <attribute name="saved" value="2025-09-21 09:14:08 PM"/>
+        <attribute name="saved" value="2025-09-22 12:39:04 AM"/>
         <attribute name="created" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA1OjIyOjAyIFBNOzIzMzI="/>
-        <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA5OjE0OjA4IFBNOzI7MjQ1Mg=="/>
+        <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIyOzEyOjM5OjA0IEFNOzM7MjQzNg=="/>
     </attributes>
     <function name="Main" type="None" variable="">
         <parameters/>
@@ -23,7 +23,6 @@
             <declare name="index1" type="Integer" array="False" size=""/>
             <for variable="index1" start="0" end="3" direction="inc" step="1">
                 <assign variable="answer[index1]" expression="colors[Random(6)]"/>
-                <output expression="answer[index1]" newline="True"/>
             </for>
             <declare name="turn" type="Integer" array="False" size=""/>
             <assign variable="turn" expression="0"/>
