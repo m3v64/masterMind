@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="4.2">
+    <attributes>
+        <attribute name="name" value="mastermind-flowgorithm"/>
+        <attribute name="authors" value="maxvi"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2025-09-21 09:14:08 PM"/>
+        <attribute name="created" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA1OjIyOjAyIFBNOzIzMzI="/>
+        <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA5OjE0OjA4IFBNOzI7MjQ1Mg=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="input" type="String" array="True" size="4"/>
+            <declare name="colors" type="String" array="True" size="6"/>
+            <assign variable="colors[0]" expression="&quot;red&quot;"/>
+            <assign variable="colors[1]" expression="&quot;green&quot;"/>
+            <assign variable="colors[2]" expression="&quot;blue&quot;"/>
+            <assign variable="colors[3]" expression="&quot;orange&quot;"/>
+            <assign variable="colors[4]" expression="&quot;yellow&quot;"/>
+            <assign variable="colors[5]" expression="&quot;purple&quot;"/>
+            <declare name="answer" type="String" array="True" size="4"/>
+            <declare name="index1" type="Integer" array="False" size=""/>
+            <for variable="index1" start="0" end="3" direction="inc" step="1">
+                <assign variable="answer[index1]" expression="colors[Random(6)]"/>
+                <output expression="answer[index1]" newline="True"/>
+            </for>
+            <declare name="turn" type="Integer" array="False" size=""/>
+            <assign variable="turn" expression="0"/>
+            <declare name="game" type="Boolean" array="False" size=""/>
+            <assign variable="game" expression="true"/>
+            <output expression="&quot;welcome to mastermind&quot;" newline="True"/>
+            <output expression="&quot;im going to ask you for 4 colors, the options are, red, green, orange, yellow, blue and purple&quot;" newline="True"/>
+            <output expression="&quot;input them like this&quot;" newline="True"/>
+            <output expression="&quot;blue&quot;" newline="True"/>
+            <output expression="&quot;red&quot;" newline="True"/>
+            <output expression="&quot;etc...&quot;" newline="True"/>
+            <output expression="&quot;make sure you spell the colors correctly and good luck&quot;" newline="True"/>
+            <while expression="game = true">
+                <declare name="found" type="Boolean" array="False" size=""/>
+                <assign variable="found" expression="false"/>
+                <declare name="isBlack" type="Boolean" array="True" size="4"/>
+                <declare name="usedAnswer" type="Boolean" array="True" size="4"/>
+                <declare name="usedGuess" type="Boolean" array="True" size="4"/>
+                <declare name="index7" type="Integer" array="False" size=""/>
+                <for variable="index7" start="0" end="3" direction="inc" step="1">
+                    <assign variable="isBlack[index7]" expression="false"/>
+                    <assign variable="usedAnswer[index7]" expression="false"/>
+                    <assign variable="usedGuess[index7]" expression="false"/>
+                </for>
+                <output expression="&quot;guess:&quot;" newline="True"/>
+                <input variable="input[0]"/>
+                <input variable="input[1]"/>
+                <input variable="input[2]"/>
+                <input variable="input[3]"/>
+                <output expression="&quot;you're on turn &quot; &amp; (turn+1) &amp; &quot;/10&quot;" newline="True"/>
+                <declare name="index2" type="Integer" array="False" size=""/>
+                <for variable="index2" start="0" end="3" direction="inc" step="1">
+                    <if expression="input[index2]=answer[index2]">
+                        <then>
+                            <assign variable="isBlack[index2]" expression="true"/>
+                            <assign variable="usedAnswer[index2]" expression="true"/>
+                            <assign variable="usedGuess[index2]" expression="true"/>
+                            <output expression="index2+1 &amp; &quot;. black&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+                <declare name="guessIndex" type="Integer" array="False" size=""/>
+                <declare name="isWhite" type="Boolean" array="False" size=""/>
+                <for variable="guessIndex" start="0" end="3" direction="inc" step="1">
+                    <if expression="usedGuess[guessIndex]=false">
+                        <then>
+                            <assign variable="isWhite" expression="false"/>
+                            <assign variable="found" expression="false"/>
+                            <declare name="answerIndex" type="Integer" array="False" size=""/>
+                            <for variable="answerIndex" start="0" end="3" direction="inc" step="1">
+                                <if expression="found=false &amp;&amp; usedAnswer[answerIndex]=false &amp;&amp; input[guessIndex]=answer[answerIndex]">
+                                    <then>
+                                        <assign variable="usedAnswer[answerIndex]" expression="true"/>
+                                        <assign variable="usedGuess[guessIndex]" expression="true"/>
+                                        <assign variable="isWhite" expression="true"/>
+                                        <assign variable="found" expression="true"/>
+                                    </then>
+                                    <else/>
+                                </if>
+                            </for>
+                            <if expression="isWhite = true">
+                                <then>
+                                    <output expression="guessIndex+1 &amp; &quot;. white&quot;" newline="True"/>
+                                </then>
+                                <else>
+                                    <output expression="guessIndex+1 &amp; &quot;. none&quot;" newline="True"/>
+                                </else>
+                            </if>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+                <assign variable="turn" expression="turn + 1"/>
+                <declare name="index4" type="Integer" array="False" size=""/>
+                <declare name="hasWon" type="Boolean" array="False" size=""/>
+                <assign variable="hasWon" expression="true"/>
+                <for variable="index4" start="0" end="3" direction="inc" step="1">
+                    <if expression="isBlack[index4] = false">
+                        <then>
+                            <assign variable="hasWon" expression="false"/>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+                <if expression="hasWon = true">
+                    <then>
+                        <output expression="&quot;you have won&quot;" newline="True"/>
+                        <assign variable="game" expression="false"/>
+                    </then>
+                    <else>
+                        <if expression="turn &gt;= 10">
+                            <then>
+                                <output expression="&quot;you have run out of turns&quot;" newline="True"/>
+                                <output expression="&quot;the answer was:&quot;" newline="True"/>
+                                <declare name="index6" type="Integer" array="False" size=""/>
+                                <for variable="index6" start="0" end="3" direction="inc" step="1">
+                                    <output expression="answer[index6]" newline="True"/>
+                                </for>
+                                <assign variable="game" expression="false"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </else>
+                </if>
+            </while>
+        </body>
+    </function>
+</flowgorithm>

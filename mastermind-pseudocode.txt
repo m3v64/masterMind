@@ -1,0 +1,88 @@
+Array input[4]
+Array colors[6]
+Array answer[4]
+
+colors[0] = "red"
+colors[1] = "green"
+colors[2] = "blue"
+colors[3] = "orange"
+colors[4] = "yellow"
+colors[5] = "purple"
+
+VOOR index1 = 0 TOT 3
+    answer[index1] = colors[Random(6)]
+    TOON answer[index1]
+
+turn = 0
+game = true
+
+TOON "welcome to mastermind"
+TOON "im going to ask you for 4 colors, the options are, red, green, orange, yellow, blue and purple"
+TOON "input them like this"
+TOON "blue"
+TOON "red"
+TOON "etc..."
+TOON "make sure you spell the colors correctly and good luck"
+
+While game = true
+    found = false
+    Array isBlack[4]
+    Array usedAnswer[4]
+    Array usedGuess[4]
+
+    VOOR index7 = 0 TOT 3
+        isBlack[index7] = false
+        usedAnswer[index7] = false
+        usedGuess[index7] = false
+    
+    TOON "guess:"
+    VRAAG input[0]
+    VRAAG input[1]
+    VRAAG input[2]
+    VRAAG input[3]
+    TOON "you're on turn " & (turn+1) & "/10"
+
+    VOOR index2 = 0 TOT 3
+        ALS input[index2]=answer[index2]
+            isBlack[index2] = true
+            usedAnswer[index2] = true
+            usedGuess[index2] = true
+            TOON index2+1 & ". black"
+
+    VOOR guessIndex = 0 TOT 3
+        ALS usedGuess[guessIndex]=false
+            isWhite = false
+            found = false
+            Integer answerIndex
+
+            VOOR answerIndex = 0 TOT 3
+                ALS found=false && usedAnswer[answerIndex]=false && input[guessIndex]=answer[answerIndex]
+                    usedAnswer[answerIndex] = true
+                    usedGuess[guessIndex] = true
+                    isWhite = true
+                    found = true
+            
+            ALS isWhite = true
+                TOON guessIndex+1 & ". white"
+            ANDERS
+                TOON guessIndex+1 & ". none"
+    
+    turn = turn + 1
+
+    hasWon = true
+    VOOR index4 = 0 TOT 3
+        ALS isBlack[index4] = false
+            hasWon = false
+      
+    ALS hasWon = true
+        TOON "you have won"
+        game = false
+
+    ANDERS
+        ALS turn >= 10
+            TOON "you have run out of turns"
+            TOON "the answer was:"
+            Integer index6
+            VOOR index6 = 0 TOT 3
+                TOON answer[index6]
+            game = false
