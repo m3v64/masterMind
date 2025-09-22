@@ -4,10 +4,9 @@
         <attribute name="name" value="mastermind-flowgorithm"/>
         <attribute name="authors" value="maxvi"/>
         <attribute name="about" value=""/>
-        <attribute name="saved" value="2025-09-22 11:13:18 "/>
+        <attribute name="saved" value="2025-09-22 01:43:42 PM"/>
         <attribute name="created" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA1OjIyOjAyIFBNOzIzMzI="/>
-        <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIyOzEyOjM5OjA0IEFNOzM7MjQzNg=="/>
-        <attribute name="edited" value="bWF4O0RFU0tUT1AtMlJMNE8xTjsyMDI1LTA5LTIyOyIxMToxMzoxOCAiOzE7MjY3NQ=="/>
+        <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIyOzAxOjQzOjQyIFBNOzU7MjQ0OA=="/>
     </attributes>
     <function name="Main" type="None" variable="">
         <parameters/>
@@ -21,6 +20,7 @@
             <assign variable="colors[4]" expression="&quot;yellow&quot;"/>
             <assign variable="colors[5]" expression="&quot;purple&quot;"/>
             <declare name="answer" type="String" array="True" size="4"/>
+            <declare name="hints" type="String" array="True" size="4"/>
             <declare name="index1" type="Integer" array="False" size=""/>
             <for variable="index1" start="0" end="3" direction="inc" step="1">
                 <assign variable="answer[index1]" expression="colors[Random(6)]"/>
@@ -47,7 +47,7 @@
                     <assign variable="isBlack[index7]" expression="false"/>
                     <assign variable="usedAnswer[index7]" expression="false"/>
                     <assign variable="usedGuess[index7]" expression="false"/>
-                    <assign variable="hints[index7]" expression="null"/>
+                    <assign variable="hints[index7]" expression="&quot;null&quot;"/>
                 </for>
                 <output expression="&quot;guess:&quot;" newline="True"/>
                 <input variable="input[0]"/>
@@ -62,7 +62,7 @@
                             <assign variable="isBlack[index2]" expression="true"/>
                             <assign variable="usedAnswer[index2]" expression="true"/>
                             <assign variable="usedGuess[index2]" expression="true"/>
-                            <output expression="index2+1 &amp; &quot;. black&quot;" newline="True"/>
+                            <assign variable="hints[index2]" expression="&quot;Black&quot;"/>
                         </then>
                         <else/>
                     </if>
@@ -88,15 +88,19 @@
                             </for>
                             <if expression="isWhite = true">
                                 <then>
-                                    <output expression="guessIndex+1 &amp; &quot;. white&quot;" newline="True"/>
+                                    <assign variable="hints[guessIndex]" expression="&quot;White&quot;"/>
                                 </then>
                                 <else>
-                                    <output expression="guessIndex+1 &amp; &quot;. none&quot;" newline="True"/>
+                                    <assign variable="hints[guessIndex]" expression="&quot;none&quot;"/>
                                 </else>
                             </if>
                         </then>
                         <else/>
                     </if>
+                </for>
+                <declare name="hintIndex" type="Integer" array="False" size=""/>
+                <for variable="hintIndex" start="0" end="3" direction="inc" step="1">
+                    <output expression="(hintIndex+1) &amp; &quot;. &quot; &amp; hints[hintIndex]" newline="True"/>
                 </for>
                 <assign variable="turn" expression="turn + 1"/>
                 <declare name="index4" type="Integer" array="False" size=""/>

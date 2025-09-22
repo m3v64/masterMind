@@ -17,14 +17,6 @@ public class MaxViehoferMastermind {
         String colors[] = {"Red", "Green", "Yellow", "Orange", "Blue", "Purple"};
         int numberOfColors = colors.length;
 
-        // Arrays initialization
-        String answer[] = new String[codeLength];
-        String hints[] = new String[codeLength];
-        boolean usedAnswer[] = new boolean[codeLength];
-        boolean usedGuess[] = new boolean[codeLength];
-        String historyGuesses[] = new String[maxTurns];
-        String historyHints[] = new String[maxTurns];
-
         clearTerminal();
         System.out.println("Welcome to Mastermind!");
         System.out.println("You have a number of turns to guess the correct sequence.");
@@ -45,6 +37,14 @@ public class MaxViehoferMastermind {
                 System.out.println("Invalid choice — defaulting to normal.");
                 codeLength = 6; maxTurns = 10;
         }
+        
+        // Arrays initialization
+        String answer[] = new String[codeLength];
+        String hints[] = new String[codeLength];
+        boolean usedAnswer[] = new boolean[codeLength];
+        boolean usedGuess[] = new boolean[codeLength];
+        String historyGuesses[] = new String[maxTurns];
+        String historyHints[] = new String[maxTurns];
 
         // Generate random answer for playing modes
         for (int i = 0; i < codeLength; i++) {
