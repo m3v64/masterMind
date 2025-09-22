@@ -2,3 +2,5 @@ lib/
 bin/
 .vscode/
 *.class
+*.mp4
+*.zip
