@@ -1,6 +1,5 @@
 Array input[4]
 Array colors[6]
-Array answer[4]
 
 colors[0] = "red"
 colors[1] = "green"
@@ -9,9 +8,11 @@ colors[3] = "orange"
 colors[4] = "yellow"
 colors[5] = "purple"
 
-VOOR index1 = 0 TOT 3
-    answer[index1] = colors[Random(6)]
-    TOON answer[index1]
+Array answer[4]
+Array hints[4]
+
+VOOR index = 0 TOT 3
+    answer[index] = colors[Random(6)]
 
 turn = 0
 game = true
@@ -24,65 +25,66 @@ TOON "red"
 TOON "etc..."
 TOON "make sure you spell the colors correctly and good luck"
 
-While game = true
+TERWIJL game = true
     found = false
     Array isBlack[4]
     Array usedAnswer[4]
     Array usedGuess[4]
 
-    VOOR index7 = 0 TOT 3
-        isBlack[index7] = false
-        usedAnswer[index7] = false
-        usedGuess[index7] = false
+    VOOR index = 0 TOT 3
+        isBlack[index] = false
+        usedAnswer[index] = false
+        usedGuess[index] = false
     
     TOON "guess:"
     VRAAG input[0]
     VRAAG input[1]
     VRAAG input[2]
     VRAAG input[3]
-    TOON "you're on turn " & (turn+1) & "/10"
+    TOON "you're on turn " PLUS (turn+1) PLUS "/10"
 
-    VOOR index2 = 0 TOT 3
-        ALS input[index2]=answer[index2]
-            isBlack[index2] = true
-            usedAnswer[index2] = true
-            usedGuess[index2] = true
-            TOON index2+1 & ". black"
+    VOOR index = 0 TOT 3
+        ALS input[index]=answer[index]
+            isBlack[index] = true
+            usedAnswer[index] = true
+            usedGuess[index] = true
+            hints[index] = "Black"
 
     VOOR guessIndex = 0 TOT 3
         ALS usedGuess[guessIndex]=false
             isWhite = false
             found = false
-            Integer answerIndex
 
             VOOR answerIndex = 0 TOT 3
-                ALS found=false && usedAnswer[answerIndex]=false && input[guessIndex]=answer[answerIndex]
+                ALS found=false EN usedAnswer[answerIndex]=false EN input[guessIndex]=answer[answerIndex]
                     usedAnswer[answerIndex] = true
                     usedGuess[guessIndex] = true
                     isWhite = true
                     found = true
             
             ALS isWhite = true
-                TOON guessIndex+1 & ". white"
+                hints[guessIndex] = "White"
             ANDERS
-                TOON guessIndex+1 & ". none"
+                hints[guessIndex] = "none"
+
+    VOOR hintIndex = 0 TOT 3
+        TOON (hintIndex+1) PLUS ". " PLUS hints[hintIndex]
     
     turn = turn + 1
 
     hasWon = true
-    VOOR index4 = 0 TOT 3
-        ALS isBlack[index4] = false
+    VOOR index = 0 TOT 3
+        ALS isBlack[index] = false
             hasWon = false
-      
+    
     ALS hasWon = true
         TOON "you have won"
         game = false
-
     ANDERS
         ALS turn >= 10
             TOON "you have run out of turns"
             TOON "the answer was:"
-            Integer index6
-            VOOR index6 = 0 TOT 3
-                TOON answer[index6]
+
+            VOOR index = 0 TOT 3
+                TOON answer[index]
             game = false
