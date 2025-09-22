@@ -4,9 +4,10 @@
         <attribute name="name" value="mastermind-flowgorithm"/>
         <attribute name="authors" value="maxvi"/>
         <attribute name="about" value=""/>
-        <attribute name="saved" value="2025-09-22 12:39:04 AM"/>
+        <attribute name="saved" value="2025-09-22 11:13:18 "/>
         <attribute name="created" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIxOzA1OjIyOjAyIFBNOzIzMzI="/>
         <attribute name="edited" value="bWF4dmk7TTNWTUFJTjsyMDI1LTA5LTIyOzEyOjM5OjA0IEFNOzM7MjQzNg=="/>
+        <attribute name="edited" value="bWF4O0RFU0tUT1AtMlJMNE8xTjsyMDI1LTA5LTIyOyIxMToxMzoxOCAiOzE7MjY3NQ=="/>
     </attributes>
     <function name="Main" type="None" variable="">
         <parameters/>
@@ -46,6 +47,7 @@
                     <assign variable="isBlack[index7]" expression="false"/>
                     <assign variable="usedAnswer[index7]" expression="false"/>
                     <assign variable="usedGuess[index7]" expression="false"/>
+                    <assign variable="hints[index7]" expression="null"/>
                 </for>
                 <output expression="&quot;guess:&quot;" newline="True"/>
                 <input variable="input[0]"/>
