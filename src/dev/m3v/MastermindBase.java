@@ -1,7 +1,7 @@
 package dev.m3v;
 import java.util.Scanner;
 
-public class Main {
+public class MastermindBase {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String colors[] = {"Red", "Green", "Yellow", "Orange", "Purple", "Blue", "Space"};

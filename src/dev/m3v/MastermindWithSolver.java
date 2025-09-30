@@ -1,7 +1,7 @@
 package dev.m3v;
 import java.util.Scanner;
 
-public class MaxViehoferMastermind {
+public class MastermindWithSolver {
     public static void main(String[] args) {
         // Scanner initialization
         Scanner scanner = new Scanner(System.in);
